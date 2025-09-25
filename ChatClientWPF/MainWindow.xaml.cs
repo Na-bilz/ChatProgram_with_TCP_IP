@@ -24,6 +24,12 @@ namespace ChatClient
         {
             try
             {
+                if (_tcp != null && _tcp.Connected)
+                {
+                    MessageBox.Show("Already connected to server.");
+                    return;
+                }
+                
                 string ip = TxtIp.Text;
                 int port = int.Parse(TxtPort.Text);
 
@@ -51,7 +57,8 @@ namespace ChatClient
         {
             _cts?.Cancel();
             _tcp?.Close();
-            ListMessages.Items.Add("Disconnected.");
+            ListUsers.Items.Clear();
+            ListMessages.Items.Add("Disconnected from server.");
         }
 
         private async void BtnSend_Click(object sender, RoutedEventArgs e)
@@ -59,6 +66,11 @@ namespace ChatClient
             if (_writer != null && _tcp?.Connected == true)
             {
                 string msg = TxtMessage.Text;
+                if (string.IsNullOrWhiteSpace(msg))
+                {
+                    ListMessages.Items.Add("Blank messages not allowed");
+                    return;
+                }
                 await _writer.WriteLineAsync(msg);
                 TxtMessage.Clear();
             }
@@ -106,12 +118,31 @@ namespace ChatClient
                     });
                 }
             }
+            catch (IOException)
+            {
+                if (!token.IsCancellationRequested)
+                {
+                    Dispatcher.Invoke(() =>
+                        ListMessages.Items.Add("Lost connection to server."));
+                }
+            }
+            catch (SocketException)
+            {
+                if (!token.IsCancellationRequested)
+                {
+                    Dispatcher.Invoke(() =>
+                        ListMessages.Items.Add("Server unreachable or closed unexpectedly."));
+                }
+            }
             catch (Exception ex)
             {
-                Dispatcher.Invoke(() =>
+                if (!token.IsCancellationRequested)
                 {
-                    ListMessages.Items.Add("Error: " + ex.Message);
-                });
+                    Dispatcher.Invoke(() =>
+                    {
+                        ListMessages.Items.Add("Error: " + ex.Message);
+                    });
+                }
             }
         }
     }
