@@ -29,7 +29,13 @@ namespace ChatClient
                     MessageBox.Show("Already connected to server.");
                     return;
                 }
-                
+
+                if (string.IsNullOrWhiteSpace(TxtUsername.Text))
+                {
+                    MessageBox.Show("Blank username is not allowed.");
+                    return;
+                }
+
                 string ip = TxtIp.Text;
                 int port = int.Parse(TxtPort.Text);
 
