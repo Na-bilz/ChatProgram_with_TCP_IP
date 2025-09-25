@@ -81,7 +81,14 @@ namespace ChatClient
                 TxtMessage.Clear();
             }
         }
-
+        private void TxtMessage_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                BtnSend_Click(sender, e); // panggil handler tombol Send
+                e.Handled = true; // biar Enter nggak nambah baris baru di TextBox
+            }
+        }
         private async Task ListenAsync(CancellationToken token)
         {
             try

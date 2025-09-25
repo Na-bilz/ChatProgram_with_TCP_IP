@@ -30,7 +30,7 @@
         <ListBox x:Name="ListUsers" Grid.Column="0" Grid.Row="1" Margin="5"/>
 
         <!-- Input pesan -->
-        <TextBox x:Name="TxtMessage" Grid.Column="1" Grid.Row="2" Margin="5,0,80,5" VerticalAlignment="Center"/>
+        <TextBox x:Name="TxtMessage" Grid.Column="1" Grid.Row="2" Margin="5,0,80,5" VerticalAlignment="Center" KeyDown="TxtMessage_KeyDown"/>
         <Button x:Name="BtnSend" Content="Send" Grid.Column="1" Grid.Row="2"
                 Width="60" HorizontalAlignment="Right" Margin="0,0,5,5" Click="BtnSend_Click"/>
     </Grid>
